@@ -44,7 +44,7 @@ To test the API and view the documentation, you can use the Swagger interface. O
 Clone the project to your local machine and run it:
 
 ```bash
-git clone https://github.com/yourUsername/repositoryName.git
+git clone https://github.com/yourUsername/repositoryName.git](https://github.com/BatuAksut/Disney_Characters.git
 cd repositoryName
 dotnet build
 dotnet run
