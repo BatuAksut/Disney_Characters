@@ -42,6 +42,21 @@ namespace Disney_Characters.Controllers
 
             return BadRequest("API request failed");
         }
-       
+        [HttpGet("name")]
+        public async Task<IActionResult> GetByName([FromQuery] string name)
+        {
+            var query = $"name={name}";  
+            var response = await _httpClient.GetAsync($"https://api.disneyapi.dev/character?{query}");
+
+            if (response.IsSuccessStatusCode)
+            {
+                var content = await response.Content.ReadAsStringAsync();
+                return Content(content, "application/json");
+            }
+
+            return BadRequest("API request failed");
+        }
+
+
     }
 }
