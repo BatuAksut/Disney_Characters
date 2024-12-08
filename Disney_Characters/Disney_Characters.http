@@ -1,0 +1,6 @@
+@Disney_Characters_HostAddress = http://localhost:5182
+
+GET {{Disney_Characters_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###
