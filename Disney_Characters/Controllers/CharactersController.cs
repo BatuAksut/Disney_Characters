@@ -26,7 +26,22 @@ namespace Disney_Characters.Controllers
                 return Content(content, "application/json");
             }
 
-            return BadRequest("API çağrısı başarısız oldu.");
+            return BadRequest("API request failed");
         }
+
+        [HttpGet("{id}")]
+        public async Task<IActionResult> Get(int id)
+        {
+            var response = await _httpClient.GetAsync($"https://api.disneyapi.dev/character/{id}");
+
+            if (response.IsSuccessStatusCode)
+            {
+                var content = await response.Content.ReadAsStringAsync();
+                return Content(content, "application/json");
+            }
+
+            return BadRequest("API request failed");
+        }
+       
     }
 }
