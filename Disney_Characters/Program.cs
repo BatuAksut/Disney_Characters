@@ -5,7 +5,23 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
-builder.Services.AddSwaggerGen();
+builder.Services.AddSwaggerGen(c =>
+{
+    c.SwaggerDoc("v1", new Microsoft.OpenApi.Models.OpenApiInfo
+    {
+        Title = "Disney Characters API",
+        Version = "v1",
+        Description = "API for fetching Disney characters from an external API",
+    });
+
+    
+    var xmlFile = Path.Combine(AppContext.BaseDirectory, "Disney_Characters.xml");
+    c.IncludeXmlComments(xmlFile);
+});
+
+
+
+
 builder.Services.AddHttpClient();
 var app = builder.Build();
 
