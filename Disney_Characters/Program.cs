@@ -22,7 +22,12 @@ builder.Services.AddSwaggerGen(c =>
 
 
 
-builder.Services.AddHttpClient();
+builder.Services.AddHttpClient("DisneyApi", client =>
+{
+    client.BaseAddress = new Uri("https://api.disneyapi.dev/");
+    client.DefaultRequestHeaders.Add("Accept", "application/json");
+});
+
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.

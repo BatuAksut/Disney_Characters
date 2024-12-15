@@ -1,6 +1,5 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using System.Text.Json;
 
 namespace Disney_Characters.Controllers
 {
@@ -8,11 +7,11 @@ namespace Disney_Characters.Controllers
     [ApiController]
     public class CharactersController : ControllerBase
     {
-        private readonly HttpClient _httpClient;
+        private readonly IHttpClientFactory _httpClientFactory;
 
-        public CharactersController(HttpClient httpClient)
+        public CharactersController(IHttpClientFactory httpClientFactory)
         {
-            _httpClient = httpClient;
+            _httpClientFactory = httpClientFactory;
         }
 
         /// <summary>
@@ -22,7 +21,8 @@ namespace Disney_Characters.Controllers
         [HttpGet]
         public async Task<IActionResult> GetAll()
         {
-            var response = await _httpClient.GetAsync("https://api.disneyapi.dev/character");
+            var client = _httpClientFactory.CreateClient();
+            var response = await client.GetAsync("https://api.disneyapi.dev/character");
 
             if (response.IsSuccessStatusCode)
             {
@@ -41,7 +41,8 @@ namespace Disney_Characters.Controllers
         [HttpGet("{id}")]
         public async Task<IActionResult> Get(int id)
         {
-            var response = await _httpClient.GetAsync($"https://api.disneyapi.dev/character/{id}");
+            var client = _httpClientFactory.CreateClient();
+            var response = await client.GetAsync($"https://api.disneyapi.dev/character/{id}");
 
             if (response.IsSuccessStatusCode)
             {
@@ -60,7 +61,8 @@ namespace Disney_Characters.Controllers
         [HttpGet("name")]
         public async Task<IActionResult> GetByName([FromQuery] string name)
         {
-            var response = await _httpClient.GetAsync($"https://api.disneyapi.dev/character?name={name}");
+            var client = _httpClientFactory.CreateClient(); 
+            var response = await client.GetAsync($"https://api.disneyapi.dev/character?name={name}");
 
             if (response.IsSuccessStatusCode)
             {
