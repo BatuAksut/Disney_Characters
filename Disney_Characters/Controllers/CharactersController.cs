@@ -1,6 +1,8 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
+
+
 namespace Disney_Characters.Controllers
 {
     [Route("api/[controller]")]
@@ -8,10 +10,12 @@ namespace Disney_Characters.Controllers
     public class CharactersController : ControllerBase
     {
         private readonly IHttpClientFactory _httpClientFactory;
+        private readonly ILogger<CharactersController> _logger;
 
-        public CharactersController(IHttpClientFactory httpClientFactory)
+        public CharactersController(IHttpClientFactory httpClientFactory,ILogger<CharactersController> logger)
         {
             _httpClientFactory = httpClientFactory;
+            _logger = logger;
         }
 
         /// <summary>
@@ -21,6 +25,7 @@ namespace Disney_Characters.Controllers
         [HttpGet]
         public async Task<IActionResult> GetAll()
         {
+            _logger.LogInformation("Get all endpoint called. {DT}", DateTime.Now.ToLongTimeString());
             var client = _httpClientFactory.CreateClient();
             var response = await client.GetAsync("https://api.disneyapi.dev/character");
 
@@ -29,7 +34,7 @@ namespace Disney_Characters.Controllers
                 var content = await response.Content.ReadAsStringAsync();
                 return Content(content, "application/json");
             }
-
+            _logger.LogError("Get all request failed. {DT}", DateTime.Now.ToLongTimeString());
             return BadRequest("API request failed");
         }
 
@@ -41,6 +46,7 @@ namespace Disney_Characters.Controllers
         [HttpGet("{id}")]
         public async Task<IActionResult> Get(int id)
         {
+            _logger.LogInformation("Get by id endpoint called. {DT}", DateTime.Now.ToLongTimeString());
             var client = _httpClientFactory.CreateClient();
             var response = await client.GetAsync($"https://api.disneyapi.dev/character/{id}");
 
@@ -49,7 +55,7 @@ namespace Disney_Characters.Controllers
                 var content = await response.Content.ReadAsStringAsync();
                 return Content(content, "application/json");
             }
-
+            _logger.LogError("Get by id request failed. {DT}", DateTime.Now.ToLongTimeString());
             return BadRequest("API request failed");
         }
 
@@ -61,6 +67,7 @@ namespace Disney_Characters.Controllers
         [HttpGet("name")]
         public async Task<IActionResult> GetByName([FromQuery] string name)
         {
+            _logger.LogInformation("Get by name endpoint called. {DT}", DateTime.Now.ToLongTimeString());
             var client = _httpClientFactory.CreateClient(); 
             var response = await client.GetAsync($"https://api.disneyapi.dev/character?name={name}");
 
@@ -69,7 +76,7 @@ namespace Disney_Characters.Controllers
                 var content = await response.Content.ReadAsStringAsync();
                 return Content(content, "application/json");
             }
-
+            _logger.LogError("Get by name request failed. {DT}", DateTime.Now.ToLongTimeString());
             return BadRequest("API request failed");
         }
     }
