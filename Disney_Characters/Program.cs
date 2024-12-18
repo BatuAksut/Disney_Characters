@@ -1,3 +1,4 @@
+
 using Serilog;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -36,7 +37,7 @@ builder.Services.AddHttpClient("DisneyApi", client =>
     client.BaseAddress = new Uri("https://api.disneyapi.dev/");
     client.DefaultRequestHeaders.Add("Accept", "application/json");
 });
-
+builder.Services.AddScoped<DisneyCharacterService>();
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
