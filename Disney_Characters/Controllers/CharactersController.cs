@@ -4,20 +4,20 @@
 [ApiController]
 public class CharactersController : ControllerBase
 {
-    private readonly DisneyCharacterService _characterService;
+    private readonly IDisneyCharacterService _disneyCharacterService;
 
-    public CharactersController(DisneyCharacterService characterService)
+    public CharactersController(IDisneyCharacterService disneyCharacterService)
     {
-        _characterService = characterService;
+        _disneyCharacterService = disneyCharacterService;
     }
 
     [HttpGet]
-    public async Task<IActionResult> GetAll()
+    public async Task<IActionResult> Get()
     {
         try
         {
-            var content = await _characterService.GetAllCharactersAsync();
-            return Content(content, "application/json");
+            var content = await _disneyCharacterService.GetCharactersAsync();
+            return Ok(content);
         }
         catch (Exception ex)
         {
@@ -26,12 +26,12 @@ public class CharactersController : ControllerBase
     }
 
     [HttpGet("{id}")]
-    public async Task<IActionResult> Get(int id)
+    public async Task<IActionResult> GetOne([FromRoute] int id)
     {
         try
         {
-            var content = await _characterService.GetCharacterByIdAsync(id);
-            return Content(content, "application/json");
+            var content = await _disneyCharacterService.GetOneCharacterByIdAsync(id);
+            return Ok(content);
         }
         catch (Exception ex)
         {
@@ -44,8 +44,8 @@ public class CharactersController : ControllerBase
     {
         try
         {
-            var content = await _characterService.GetCharactersByNameAsync(name);
-            return Content(content, "application/json");
+            var result = await _disneyCharacterService.GetOneCharactersByNameAsync(name);
+            return Ok(result);
         }
         catch (Exception ex)
         {
