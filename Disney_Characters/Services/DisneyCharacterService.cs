@@ -1,4 +1,4 @@
-﻿public class DisneyCharacterService
+﻿public class DisneyCharacterService : IDisneyCharacterService
 {
     private readonly IHttpClientFactory _httpClientFactory;
     private readonly ILogger<DisneyCharacterService> _logger;
@@ -9,7 +9,7 @@
         _logger = logger;
     }
 
-    public async Task<string> GetAllCharactersAsync()
+    public async Task<string> GetCharactersAsync()
     {
         _logger.LogInformation("Fetching all Disney characters. {DT}", DateTime.Now.ToLongTimeString());
         var client = _httpClientFactory.CreateClient("DisneyApi");
@@ -25,7 +25,7 @@
         throw new Exception("Failed to fetch Disney characters");
     }
 
-    public async Task<string> GetCharacterByIdAsync(int id)
+    public async Task<string> GetOneCharacterByIdAsync(int id)
     {
         _logger.LogInformation("Fetching Disney character by ID: {Id}. {DT}", id, DateTime.Now.ToLongTimeString());
         var client = _httpClientFactory.CreateClient("DisneyApi");
@@ -41,7 +41,7 @@
         throw new Exception($"Failed to fetch Disney character with ID: {id}");
     }
 
-    public async Task<string> GetCharactersByNameAsync(string name)
+    public async Task<string> GetOneCharactersByNameAsync(string name)
     {
         _logger.LogInformation("Fetching Disney characters by name: {Name}. {DT}", name, DateTime.Now.ToLongTimeString());
         var client = _httpClientFactory.CreateClient("DisneyApi");
