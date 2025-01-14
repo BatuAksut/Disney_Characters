@@ -1,6 +1,8 @@
-﻿public interface IDisneyCharacterService
+﻿using Disney_Characters.Models;
+
+public interface IDisneyCharacterService
 {
-    Task<string> GetCharactersAsync();
-    Task<string> GetOneCharacterByIdAsync(int id);
-    Task<string> GetOneCharactersByNameAsync(string name);
+    Task<List<CharacterDto>> GetCharactersAsync();
+    Task<CharacterDto> GetOneCharacterByIdAsync(int id);
+    Task<CharacterDto> GetOneCharactersByNameAsync(string name);
 }
