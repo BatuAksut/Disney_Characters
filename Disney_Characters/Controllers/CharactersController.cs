@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Disney_Characters.Models;
+using Microsoft.AspNetCore.Mvc;
 
 [Route("api/[controller]")]
 [ApiController]
@@ -46,6 +47,20 @@ public class CharactersController : ControllerBase
         {
             var result = await _disneyCharacterService.GetOneCharactersByNameAsync(name);
             return Ok(result);
+        }
+        catch (Exception ex)
+        {
+            return BadRequest(ex.Message);
+        }
+    }
+
+    [HttpPost]
+    public async Task<IActionResult> AddCharacter([FromBody] CharacterDto characterDto)
+    {
+        try
+        {
+            var result = await _disneyCharacterService.AddCharacterAsync(characterDto);
+            return CreatedAtAction(nameof(GetOne), new { id = result.Id }, result);
         }
         catch (Exception ex)
         {

@@ -1,89 +1,151 @@
-﻿using Disney_Characters.Models;
+﻿using Disney_Characters;
+using Disney_Characters.Models;
+using Disney_Characters.Models.Disney_Characters.Models;
+using Microsoft.EntityFrameworkCore;
 using System.Text.Json;
 
 public class DisneyCharacterService : IDisneyCharacterService
 {
     private readonly IHttpClientFactory _httpClientFactory;
     private readonly ILogger<DisneyCharacterService> _logger;
+    private readonly DisneyDbContext _context;
 
-    public DisneyCharacterService(IHttpClientFactory httpClientFactory, ILogger<DisneyCharacterService> logger)
+    public DisneyCharacterService(
+        IHttpClientFactory httpClientFactory,
+        ILogger<DisneyCharacterService> logger,
+        DisneyDbContext context)
     {
         _httpClientFactory = httpClientFactory;
         _logger = logger;
+        _context = context;
     }
 
     public async Task<List<CharacterDto>> GetCharactersAsync()
     {
-        _logger.LogInformation("Fetching all Disney characters. {DT}", DateTime.Now.ToLongTimeString());
-        var client = _httpClientFactory.CreateClient("DisneyApi");
-        var response = await client.GetAsync("character");
+        _logger.LogInformation("Fetching characters from database. {DT}", DateTime.Now.ToLongTimeString());
 
-        if (response.IsSuccessStatusCode)
-        {
-            var jsonString = await response.Content.ReadAsStringAsync();
-            var jsonDocument = JsonDocument.Parse(jsonString);
-            var dataElement = jsonDocument.RootElement.GetProperty("data");
-
-            _logger.LogInformation("Successfully fetched all Disney characters. {DT}", DateTime.Now.ToLongTimeString());
-            var characters = JsonSerializer.Deserialize<List<CharacterDto>>(dataElement.GetRawText(), new JsonSerializerOptions
+        var characters = await _context.Characters
+            .Select(c => new CharacterDto
             {
-                PropertyNameCaseInsensitive = true
-            });
-            return characters;
-        }
+                Id = c.Id,
+                Name = c.Name,
+                ImageUrl = c.ImageUrl,
+                SourceUrl= c.SourceUrl,
+                Films = c.Films,
+                TvShows=c.TvShows,
 
-        _logger.LogError("Failed to fetch Disney characters. Status Code: {StatusCode}, {DT}", response.StatusCode, DateTime.Now.ToLongTimeString());
-        throw new Exception("Failed to fetch Disney characters");
+                
+            })
+            .ToListAsync();
+
+        return characters;
     }
 
     public async Task<CharacterDto> GetOneCharacterByIdAsync(int id)
     {
-        _logger.LogInformation("Fetching Disney character by ID: {Id}. {DT}", id, DateTime.Now.ToLongTimeString());
-        var client = _httpClientFactory.CreateClient("DisneyApi");
-        var response = await client.GetAsync($"character/{id}");
-
-        if (response.IsSuccessStatusCode)
-        {
-            var jsonString = await response.Content.ReadAsStringAsync();
-            var jsonDocument = JsonDocument.Parse(jsonString);
-            var dataElement = jsonDocument.RootElement.GetProperty("data");
-            var character = JsonSerializer.Deserialize<CharacterDto>(dataElement.GetRawText(), new JsonSerializerOptions
+        var character = await _context.Characters
+            .Where(c => c.Id == id)
+            .Select(c => new CharacterDto
             {
-                PropertyNameCaseInsensitive = true
-            });
+                Id = c.Id,
+                Name = c.Name,
+                ImageUrl = c.ImageUrl,
+                SourceUrl = c.SourceUrl,
+                Films = c.Films,
+                TvShows = c.TvShows,
 
+            })
+            .FirstOrDefaultAsync();
 
-            _logger.LogInformation("Successfully fetched Disney character by ID: {Id}. {DT}", id, DateTime.Now.ToLongTimeString());
-            return character;
-        }
+        if (character == null)
+            throw new Exception($"Character with ID {id} not found");
 
-        _logger.LogError("Failed to fetch Disney character by ID: {Id}. Status Code: {StatusCode}, {DT}", id, response.StatusCode, DateTime.Now.ToLongTimeString());
-        throw new Exception($"Failed to fetch Disney character with ID: {id}");
+        return character;
     }
-
-   
 
     public async Task<CharacterDto> GetOneCharactersByNameAsync(string name)
     {
-        _logger.LogInformation("Fetching Disney characters by name: {Name}. {DT}", name, DateTime.Now.ToLongTimeString());
-        var client = _httpClientFactory.CreateClient("DisneyApi");
-        var response = await client.GetAsync($"character?name={name}");
-
-        if (response.IsSuccessStatusCode)
-        {
-            var jsonString = await response.Content.ReadAsStringAsync();
-            var jsonDocument = JsonDocument.Parse(jsonString);
-            var dataElement = jsonDocument.RootElement.GetProperty("data");
-            var character = JsonSerializer.Deserialize<CharacterDto>(dataElement.GetRawText(), new JsonSerializerOptions
+        var character = await _context.Characters
+            .Where(c => c.Name.Contains(name))
+            .Select(c => new CharacterDto
             {
-                PropertyNameCaseInsensitive = true
-            });
+                Id = c.Id,
+                Name = c.Name,
+                ImageUrl = c.ImageUrl,
+                SourceUrl = c.SourceUrl,
+                Films = c.Films,
+                TvShows = c.TvShows,
 
-            _logger.LogInformation("Successfully fetched Disney characters by name: {Name}. {DT}", name, DateTime.Now.ToLongTimeString());
-            return character;
+            })
+            .FirstOrDefaultAsync();
+
+        if (character == null)
+            throw new Exception($"Character with name {name} not found");
+
+        return character;
+    }
+
+    public async Task<CharacterDto> AddCharacterAsync(CharacterDto characterDto)
+    {
+        var character = new Character
+        {
+            Name = characterDto.Name,
+            ImageUrl = characterDto.ImageUrl,
+            SourceUrl = characterDto.SourceUrl,
+            Films=characterDto.Films,
+            TvShows=characterDto.TvShows,
+            
+        };
+
+        _context.Characters.Add(character);
+        await _context.SaveChangesAsync();
+
+        characterDto.Id = character.Id;
+        return characterDto;
+    }
+
+
+    public async Task SeedDataFromApiAsync()
+    {
+        try
+        {
+            var client = _httpClientFactory.CreateClient("DisneyApi");
+            var response = await client.GetAsync("character");
+
+            if (response.IsSuccessStatusCode)
+            {
+                var jsonString = await response.Content.ReadAsStringAsync();
+                var jsonDocument = JsonDocument.Parse(jsonString);
+                var dataElement = jsonDocument.RootElement.GetProperty("data");
+                var characters = JsonSerializer.Deserialize<List<Character>>(dataElement.GetRawText(), new JsonSerializerOptions
+                {
+                    PropertyNameCaseInsensitive = true
+                });
+
+                if (characters != null)
+                {
+                    foreach (var character in characters)
+                    {
+                        character.Films ??= new List<string>();
+                        character.TvShows ??= new List<string>();
+
+                        if (!await _context.Characters.AnyAsync(c => c.Id == character.Id))
+                        {
+                            _logger.LogInformation($"Adding character: {character.Name} with ID: {character.Id}");
+                            _context.Characters.Add(character);
+                        }
+                    }
+
+                    await _context.SaveChangesAsync();
+                    _logger.LogInformation($"Successfully seeded {characters.Count} characters");
+                }
+            }
         }
-
-        _logger.LogError("Failed to fetch Disney characters by name: {Name}. Status Code: {StatusCode}, {DT}", name, response.StatusCode, DateTime.Now.ToLongTimeString());
-        throw new Exception($"Failed to fetch Disney characters with name: {name}");
+        catch (Exception ex)
+        {
+            _logger.LogError(ex, "Error occurred while seeding data from API");
+            throw;
+        }
     }
 }
+

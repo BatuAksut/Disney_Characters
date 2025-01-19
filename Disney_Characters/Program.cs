@@ -1,4 +1,3 @@
-
 using Disney_Characters.Extensions;
 using Serilog;
 
@@ -9,20 +8,28 @@ builder.Services.AddControllers();
 builder.Services.AddSwaggerConfiguration();
 builder.Services.AddDisneyHttpClient();
 
+// Yeni eklenen database konfigürasyonu
+builder.Services.AddDatabaseConfiguration(builder.Configuration);
+
 var app = builder.Build();
-if (app.Environment.IsDevelopment())
-{
-    app.UseSwagger();
-    app.UseSwaggerUI();
-}
-app.UseHttpsRedirection();
-app.UseAuthorization();
-app.MapControllers();
-app.Run();
 
 try
 {
     Log.Information("Application is starting");
+
+    if (app.Environment.IsDevelopment())
+    {
+        app.UseSwagger();
+        app.UseSwaggerUI();
+    }
+
+    // Database initialization
+    await app.InitializeDatabaseAsync();
+
+    app.UseHttpsRedirection();
+    app.UseAuthorization();
+    app.MapControllers();
+
     app.Run();
 }
 catch (Exception ex)
