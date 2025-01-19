@@ -9,6 +9,7 @@ builder.Services.AddControllers();
 builder.Services.AddSwaggerConfiguration();
 builder.Services.AddDisneyHttpClient();
 
+builder.Services.AddCharacterRepository();
 var app = builder.Build();
 if (app.Environment.IsDevelopment())
 {

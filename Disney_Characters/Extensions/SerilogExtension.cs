@@ -2,7 +2,7 @@
 
 namespace Disney_Characters.Extensions;
 
-public static class SerilogExtenstion
+public static class SerilogExtension
 {
     public static void ConfigureSerilog(this IHostBuilder host)
     {

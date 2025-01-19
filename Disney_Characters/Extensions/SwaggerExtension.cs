@@ -1,6 +1,6 @@
 ﻿namespace Disney_Characters.Extensions;
 
-public static class SwaggerExtenstion
+public static class SwaggerExtension
 {
     public static void AddSwaggerConfiguration(this IServiceCollection services)
     {

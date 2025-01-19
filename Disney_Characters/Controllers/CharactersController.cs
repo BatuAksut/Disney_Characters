@@ -44,7 +44,7 @@ public class CharactersController : ControllerBase
     {
         try
         {
-            var result = await _disneyCharacterService.GetOneCharactersByNameAsync(name);
+            var result = await _disneyCharacterService.GetOneCharacterByNameAsync(name);
             return Ok(result);
         }
         catch (Exception ex)

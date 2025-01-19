@@ -1,9 +1,15 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
-VisualStudioVersion = 17.12.35527.113 d17.12
+VisualStudioVersion = 17.12.35527.113
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Disney_Characters", "Disney_Characters\Disney_Characters.csproj", "{82C60C68-EAA5-4EE4-B67E-BC61E9BA1CD5}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Core", "Core\Core.csproj", "{49637DF8-4EE1-4DD2-A83F-4CC90981A4BF}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DataAccess", "DataAccess\DataAccess.csproj", "{C7C2CD96-40D8-481C-B6D1-353D64B6F340}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Entities", "Entities\Entities.csproj", "{DEE034FE-DEF5-4911-AB67-3353FB1A5FFF}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -15,6 +21,18 @@ Global
 		{82C60C68-EAA5-4EE4-B67E-BC61E9BA1CD5}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{82C60C68-EAA5-4EE4-B67E-BC61E9BA1CD5}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{82C60C68-EAA5-4EE4-B67E-BC61E9BA1CD5}.Release|Any CPU.Build.0 = Release|Any CPU
+		{49637DF8-4EE1-4DD2-A83F-4CC90981A4BF}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{49637DF8-4EE1-4DD2-A83F-4CC90981A4BF}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{49637DF8-4EE1-4DD2-A83F-4CC90981A4BF}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{49637DF8-4EE1-4DD2-A83F-4CC90981A4BF}.Release|Any CPU.Build.0 = Release|Any CPU
+		{C7C2CD96-40D8-481C-B6D1-353D64B6F340}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{C7C2CD96-40D8-481C-B6D1-353D64B6F340}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{C7C2CD96-40D8-481C-B6D1-353D64B6F340}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{C7C2CD96-40D8-481C-B6D1-353D64B6F340}.Release|Any CPU.Build.0 = Release|Any CPU
+		{DEE034FE-DEF5-4911-AB67-3353FB1A5FFF}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{DEE034FE-DEF5-4911-AB67-3353FB1A5FFF}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{DEE034FE-DEF5-4911-AB67-3353FB1A5FFF}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{DEE034FE-DEF5-4911-AB67-3353FB1A5FFF}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
